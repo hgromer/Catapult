@@ -12,9 +12,9 @@ public class KeyListener implements NativeKeyListener {
   private static final Logger LOG = LoggerFactory.getLogger(KeyListener.class);
 
   private short hotKeyFlag = 0x000;
-  private static final short MASK_CTR = 1 << 0;
-  private static final short MASK_SH = 1 << 1;
-  private static final short MASK_NUM = 1 << 10;
+  private final short MASK_CTR = 1 << 0;
+  private final short MASK_SH = 1 << 1;
+  private final short MASK_NUM = 1 << 10;
 
   @Override
   public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {

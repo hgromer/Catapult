@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,9 +19,13 @@ public class MonitorFactory {
     ImmutableMap.Builder<Integer, Monitor> builder = ImmutableMap.builder();
 
     for (int i = 0; i < devices.length; ++i) {
-      builder.put(i, new Monitor(devices[i]));
+      builder.put(i, new Monitor(devices[i], i));
     }
     MONITORS = builder.build();
+  }
+
+  public static Collection<Monitor> getMonitors() {
+    return MONITORS.values();
   }
 
   public static Optional<Monitor> getMonitor(int monitorNumber) {

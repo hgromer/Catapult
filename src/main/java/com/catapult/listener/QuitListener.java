@@ -1,6 +1,5 @@
 package com.catapult.listener;
 
-import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
@@ -11,9 +10,9 @@ public class QuitListener implements NativeKeyListener {
   private static final Logger LOG = LoggerFactory.getLogger(KeyListener.class);
 
   private short hotKeyFlag = 0x000;
-  private static final short MASK_CTR = 1 << 0;
-  private static final short MASK_SH = 1 << 1;
-  private static final short MASK_Q = 1 << 10;
+  private final short MASK_CTR = 1 << 0;
+  private final short MASK_SH = 1 << 1;
+  private final short MASK_Q = 1 << 10;
 
   @Override
   public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {
@@ -35,7 +34,7 @@ public class QuitListener implements NativeKeyListener {
       if (hotKeyFlag == (MASK_CTR & MASK_SH & MASK_Q)) {
         try {
           LOG.info("Gracefully shutting down Catapult...");
-          GlobalScreen.unregisterNativeHook();
+          GlobalScreenManager.unregisterNativeHook();
           LOG.info("Catapult shutdown");
         } catch (NativeHookException e) {
           LOG.error("Error quiting...could not unregister native hook", e);

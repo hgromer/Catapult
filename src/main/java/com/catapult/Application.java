@@ -1,5 +1,7 @@
 package com.catapult;
 
+import com.catapult.listener.DisplayMonitorInfoListener;
+import com.catapult.listener.GlobalScreenManager;
 import com.catapult.listener.KeyListener;
 import com.catapult.listener.QuitListener;
 import org.jnativehook.GlobalScreen;
@@ -15,8 +17,9 @@ public class Application {
     if (!Platform.isMac()) {
       throw new IllegalStateException("Mac is the only platform currently supported");
     }
-    GlobalScreen.registerNativeHook();
-    GlobalScreen.addNativeKeyListener(new QuitListener());
-    GlobalScreen.addNativeKeyListener(new KeyListener());
+    GlobalScreenManager.registerNativeHook();
+    GlobalScreenManager.addNativeKeyListener(new QuitListener());
+    GlobalScreenManager.addNativeKeyListener(new DisplayMonitorInfoListener());
+    GlobalScreenManager.addNativeKeyListener(new KeyListener());
   }
 }
