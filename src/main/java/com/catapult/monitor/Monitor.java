@@ -4,9 +4,11 @@ import java.awt.*;
 
 public class Monitor {
   private final GraphicsDevice device;
+  private final int monitorNumber;
 
-  Monitor(GraphicsDevice device) {
+  Monitor(GraphicsDevice device, int monitorNumber) {
     this.device = device;
+    this.monitorNumber = monitorNumber;
   }
 
   public String getName() {
@@ -16,6 +18,10 @@ public class Monitor {
   public Rectangle getBounds() {
     return device.getDefaultConfiguration()
         .getBounds();
+  }
+
+  public int getDisplayableMonitorNumber() {
+    return monitorNumber + 1;
   }
 
   @Override
