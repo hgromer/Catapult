@@ -23,7 +23,7 @@ public class MacOsManager {
     try (InputStream is = runAppleScriptCommand(command).getInputStream()) {
       String result = new String(is.readAllBytes());
       LOG.info("Retrieved result {} from getForegroundApplication", result);
-      return result.substring(0, result.indexOf(','));
+      return result.trim();
     }
   }
 
