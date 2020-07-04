@@ -24,6 +24,10 @@ public class Monitor {
     return monitorNumber + 1;
   }
 
+  public GraphicsConfiguration getConfiguration() {
+    return device.getDefaultConfiguration();
+  }
+
   @Override
   public String toString() {
     return getName();
