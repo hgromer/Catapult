@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 public class QuitListener implements NativeKeyListener {
   private static final Logger LOG = LoggerFactory.getLogger(KeyListener.class);
 
-  private short hotKeyFlag = 0x000;
+  private short hotKeyFlag = 0x00;
   private final short MASK_CTR = 1 << 0;
   private final short MASK_SH = 1 << 1;
   private final short MASK_Q = 1 << 10;

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class DisplayMonitorInfoListener implements NativeKeyListener, AutoCloseable {
   private static final Logger LOG = LoggerFactory.getLogger(DisplayMonitorInfoListener.class);
 
-  private short hotKeyFlag = 0x000;
+  private short hotKeyFlag = 0x00;
   private final short MASK_CTR = 1 << 0;
   private final short MASK_SH = 1 << 1;
   private final short MASK_M = 1 << 10;
