@@ -4,8 +4,6 @@ import com.catapult.listener.info.BaseNativeKeyEventInfo;
 import com.google.common.collect.ImmutableMap;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -14,8 +12,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractKeyListener implements NativeKeyListener {
-  private static final Logger LOG = LoggerFactory.getLogger(AbstractKeyListener.class);
-
   private final Map<Integer, BaseNativeKeyEventInfo> nativeKeyEventInfoMap;
   private final int totalPossibleActiveKeys;
 
@@ -26,7 +22,6 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
 
     boolean activationFound = false;
     Set<Integer> keyCodesSeen = new HashSet<>();
-    int maskCum = 0x00;
 
     for (BaseNativeKeyEventInfo keyEventInfo : keyEventInfos) {
       if (keyEventInfo.isActivationKey()) {
@@ -56,7 +51,6 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
   @Override
   public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
     if (keysActive.get() < totalPossibleActiveKeys) {
-      LOG.info("Current active keys {}", keysActive.get());
       Optional<BaseNativeKeyEventInfo> nativeKeyEventInfoMaybe = Optional.ofNullable(nativeKeyEventInfoMap.get(nativeKeyEvent.getKeyCode()));
 
       if (nativeKeyEventInfoMaybe.isPresent()) {
@@ -80,7 +74,6 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
       keysActive.decrementAndGet();
       onReleased();
     }
-
   }
 
   protected abstract void onAllPressed();
