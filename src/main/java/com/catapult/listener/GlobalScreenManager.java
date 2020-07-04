@@ -13,10 +13,6 @@ public class GlobalScreenManager {
   private static final Logger LOG = LoggerFactory.getLogger(GlobalScreenManager.class);
   private static final Set<AutoCloseable> closeables = new HashSet<>();
 
-  public static void withCloseable(AutoCloseable closeable) {
-    closeables.add(closeable);
-  }
-
   public static void registerNativeHook() throws NativeHookException {
     GlobalScreen.registerNativeHook();
   }
