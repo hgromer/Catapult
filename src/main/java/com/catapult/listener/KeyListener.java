@@ -16,8 +16,8 @@ public class KeyListener extends AbstractKeyListener  {
 
   public KeyListener() {
     super(
-        new NativeKeyEventInfo((short) (1 << 0), NativeKeyEvent.VC_CONTROL, false),
-        new NativeKeyEventInfo((short) (1 << 1), NativeKeyEvent.VC_SHIFT, false),
+        new NativeKeyEventInfo(NativeKeyEvent.VC_CONTROL, false),
+        new NativeKeyEventInfo(NativeKeyEvent.VC_SHIFT, false),
         new NumberNativeKeyEventInfo((short) (1 << 10), true)
     );
   }

@@ -1,36 +1,34 @@
 package com.catapult.listener;
 
 import com.catapult.listener.info.NativeKeyEventInfo;
+import com.catapult.monitor.Monitor;
 import com.catapult.monitor.MonitorFactory;
 import com.catapult.monitor.MonitorInfoDisplay;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DisplayMonitorInfoListener extends AbstractKeyListener implements AutoCloseable {
   private static final Logger LOG = LoggerFactory.getLogger(DisplayMonitorInfoListener.class);
 
-  private final List<MonitorInfoDisplay> monitorInfoDisplays;
+  private final List<MonitorInfoDisplay> currentMonitorInfoDisplays;
 
   public DisplayMonitorInfoListener() {
     super(
-        new NativeKeyEventInfo((short) (1 << 0), NativeKeyEvent.VC_CONTROL, false),
-        new NativeKeyEventInfo((short) (1 << 1), NativeKeyEvent.VC_SHIFT, false),
-        new NativeKeyEventInfo((short) (1 << 10), NativeKeyEvent.VC_M, true)
+        new NativeKeyEventInfo(NativeKeyEvent.VC_CONTROL, false),
+        new NativeKeyEventInfo(NativeKeyEvent.VC_SHIFT, false),
+        new NativeKeyEventInfo(NativeKeyEvent.VC_M, true)
     );
-
-    this.monitorInfoDisplays = MonitorFactory.getMonitors().stream()
-        .map(MonitorInfoDisplay::new)
-        .collect(Collectors.toList());
+    this.currentMonitorInfoDisplays = new ArrayList<>();
   }
 
 
   @Override
-  public void close() throws Exception {
-    for (MonitorInfoDisplay monitorInfoDisplay : monitorInfoDisplays) {
+  public void close() {
+    for (MonitorInfoDisplay monitorInfoDisplay : currentMonitorInfoDisplays) {
       LOG.info("Killing monitor info display {}", monitorInfoDisplay);
       monitorInfoDisplay.kill();
     }
@@ -38,15 +36,18 @@ public class DisplayMonitorInfoListener extends AbstractKeyListener implements A
 
   @Override
   protected void onAllPressed() {
-    for (MonitorInfoDisplay monitorInfoDisplay : monitorInfoDisplays) {
-      monitorInfoDisplay.display();
+    for (Monitor monitor : MonitorFactory.getMonitors()) {
+      MonitorInfoDisplay display = new MonitorInfoDisplay(monitor);
+      display.display();
+      currentMonitorInfoDisplays.add(display);
     }
   }
 
   @Override
   protected void onReleased() {
-    for (MonitorInfoDisplay monitorInfoDisplay : monitorInfoDisplays) {
-      monitorInfoDisplay.hide();
+    for (MonitorInfoDisplay monitorInfoDisplay : currentMonitorInfoDisplays) {
+      monitorInfoDisplay.kill();
     }
+    currentMonitorInfoDisplays.clear();
   }
 }

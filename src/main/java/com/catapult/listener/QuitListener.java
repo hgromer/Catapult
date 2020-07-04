@@ -11,9 +11,9 @@ public class QuitListener extends AbstractKeyListener {
 
   public QuitListener() {
     super(
-        new NativeKeyEventInfo((short) (1 << 0), NativeKeyEvent.VC_CONTROL, false),
-        new NativeKeyEventInfo((short) (1 << 1), NativeKeyEvent.VC_SHIFT, false),
-        new NativeKeyEventInfo((short) (1 << 10), NativeKeyEvent.VC_Q, true)
+        new NativeKeyEventInfo(NativeKeyEvent.VC_CONTROL, false),
+        new NativeKeyEventInfo(NativeKeyEvent.VC_SHIFT, false),
+        new NativeKeyEventInfo(NativeKeyEvent.VC_Q, true)
     );
   }
 

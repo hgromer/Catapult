@@ -4,19 +4,12 @@ import java.util.Collections;
 import java.util.Set;
 
 public class NativeKeyEventInfo implements BaseNativeKeyEventInfo {
-  private final short value;
   private final Set<Integer> keyEventCode;
   private final boolean isActivation;
 
-  public NativeKeyEventInfo(short value, int keyEventCode, boolean isActivation) {
-    this.value = value;
+  public NativeKeyEventInfo(int keyEventCode, boolean isActivation) {
     this.keyEventCode = Collections.singleton(keyEventCode);
     this.isActivation = isActivation;
-  }
-
-  @Override
-  public short getValue() {
-    return value;
   }
 
   @Override
