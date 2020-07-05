@@ -20,7 +20,9 @@ public class GlobalScreenManager {
   public static void unregisterNativeHook() throws NativeHookException {
     for (AutoCloseable closeable : closeables) {
       try {
+        LOG.info("Attempting to close {}...", closeable);
         closeable.close();
+        LOG.info("{} closed", closeable);
       } catch (Exception e) {
         LOG.error("Failed to close auto closeable", e);
       }
@@ -31,7 +33,7 @@ public class GlobalScreenManager {
   public static void addNativeKeyListener(NativeKeyListener nativeKeyListener) {
     GlobalScreen.addNativeKeyListener(nativeKeyListener);
     if (nativeKeyListener instanceof AutoCloseable) {
-      LOG.info("Register {} as autocloseable", nativeKeyListener);
+      LOG.info("Registering {} as autocloseable", nativeKeyListener.getClass());
       closeables.add((AutoCloseable) nativeKeyListener);
     }
   }
