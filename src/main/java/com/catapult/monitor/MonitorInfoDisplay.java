@@ -19,7 +19,7 @@ public class MonitorInfoDisplay {
     Rectangle bounds = monitor.getBounds();
 
     JLabel text = new JLabel(String.valueOf(monitor.getDisplayableMonitorNumber()), SwingConstants.CENTER);
-    text.setFont(new Font("Verdana", Font.BOLD,20));
+    text.setFont(new Font("Lucida Grande", Font.BOLD,40));
     text.setOpaque(true);
     text.setBackground(Color.BLACK);
     text.setForeground(Color.WHITE);

@@ -9,13 +9,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractKeyListener implements NativeKeyListener {
   private final Map<Integer, BaseNativeKeyEventInfo> nativeKeyEventInfoMap;
   private final int totalPossibleActiveKeys;
 
-  private AtomicInteger keysActive = new AtomicInteger(0);
+  private final Set<Integer> activeKeys;
 
   AbstractKeyListener(BaseNativeKeyEventInfo... keyEventInfos) {
     ImmutableMap.Builder<Integer, BaseNativeKeyEventInfo> builder = ImmutableMap.builder();
@@ -41,6 +40,7 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
 
     this.nativeKeyEventInfoMap = builder.build();
     this.totalPossibleActiveKeys = keyEventInfos.length;
+    this.activeKeys = new HashSet<>();
   }
 
   @Override
@@ -49,13 +49,14 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
   }
 
   @Override
-  public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
-    if (keysActive.get() < totalPossibleActiveKeys) {
+  public synchronized void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
+    if (activeKeys.size() < totalPossibleActiveKeys) {
       Optional<BaseNativeKeyEventInfo> nativeKeyEventInfoMaybe = Optional.ofNullable(nativeKeyEventInfoMap.get(nativeKeyEvent.getKeyCode()));
 
       if (nativeKeyEventInfoMaybe.isPresent()) {
+        activeKeys.add(nativeKeyEvent.getKeyCode());
         BaseNativeKeyEventInfo baseNativeKeyEventInfo = nativeKeyEventInfoMaybe.get();
-        int currentActive = keysActive.addAndGet(1);
+        int currentActive = activeKeys.size();
 
         if (baseNativeKeyEventInfo.isActivationKey()) {
           if (totalPossibleActiveKeys == currentActive) {
@@ -67,11 +68,11 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
   }
 
   @Override
-  public void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
+  public synchronized void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
     Optional<BaseNativeKeyEventInfo> nativeKeyEventInfoMaybe = Optional.ofNullable(nativeKeyEventInfoMap.get(nativeKeyEvent.getKeyCode()));
 
     if (nativeKeyEventInfoMaybe.isPresent()) {
-      keysActive.decrementAndGet();
+      activeKeys.remove(nativeKeyEvent.getKeyCode());
       onReleased();
     }
   }
