@@ -2,7 +2,8 @@ package com.catapult.listener;
 
 import com.catapult.listener.info.NativeKeyEventInfo;
 import com.catapult.listener.info.NumberNativeKeyEventInfo;
-import com.catapult.mac.MacOsManager;
+import com.catapult.managers.OsManager;
+import com.catapult.managers.OsManagerFactory;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import java.io.IOException;
 public class KeyListener extends AbstractKeyListener  {
   private static final Logger LOG = LoggerFactory.getLogger(KeyListener.class);
 
+  private final OsManager osManager;
   private NativeKeyEvent currentKeyEvent;
 
   public KeyListener() {
@@ -20,6 +22,7 @@ public class KeyListener extends AbstractKeyListener  {
         new NativeKeyEventInfo(NativeKeyEvent.VC_SHIFT, false),
         new NumberNativeKeyEventInfo(true)
     );
+    this.osManager = OsManagerFactory.getOsManager();
   }
 
   @Override
@@ -32,9 +35,9 @@ public class KeyListener extends AbstractKeyListener  {
   protected void onAllPressed() {
     try {
       int monitorNumber = Integer.parseInt(NativeKeyEvent.getKeyText(currentKeyEvent.getKeyCode()));
-      String application = MacOsManager.getForegroundApplication();
+      String application = osManager.getForegroundApplication();
       LOG.info("Moving {} to monitor {}", application, monitorNumber - 1);
-      MacOsManager.moveApplicationToMonitor(application, monitorNumber);
+      osManager.moveApplicationToMonitor(application, monitorNumber);
     } catch (IOException e) {
       LOG.error("Could not move application", e);
     }
