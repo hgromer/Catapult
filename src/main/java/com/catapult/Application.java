@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 public class Application {
   private static org.slf4j.Logger LOG = LoggerFactory.getLogger(Application.class);
   public static void main(String[] args) {
-    System.setProperty("apple.awt.UIElement", "true");
     // Turn off JNativeHook logger because it's noisy
     Logger.getLogger(GlobalScreen.class.getPackage().getName())
         .setLevel(Level.OFF);

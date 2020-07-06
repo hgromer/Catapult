@@ -33,10 +33,6 @@ public class CatapultSystemTray {
     }
   }
 
-  public void close() {
-    systemTray.remove(icon);
-  }
-
   private ImmutableList<MenuItem> buildMenuItems() {
     MenuItem quitItem = new MenuItem("Quit");
 
