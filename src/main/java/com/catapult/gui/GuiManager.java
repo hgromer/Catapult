@@ -8,8 +8,7 @@ public class GuiManager {
     return OPTIONS_GUI;
   }
 
-  public static void dispose() {
-    OPTIONS_GUI.close();
-    CATAPULT_SYSTEM_TRAY.close();
+  public static CatapultSystemTray getCatapultSystemTray() {
+    return CATAPULT_SYSTEM_TRAY;
   }
 }
