@@ -3,10 +3,9 @@ package com.catapult;
 import com.catapult.listener.DisplayMonitorInfoListener;
 import com.catapult.listener.GlobalScreenManager;
 import com.catapult.listener.GuiActivateListener;
-import com.catapult.listener.KeyListener;
+import com.catapult.listener.MoveApplicationListener;
 import com.catapult.listener.QuitListener;
 import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
 import org.slf4j.LoggerFactory;
 
 import java.util.logging.Level;
@@ -23,15 +22,11 @@ public class Application {
       GlobalScreenManager.registerNativeHook();
       GlobalScreenManager.addNativeKeyListener(new QuitListener());
       GlobalScreenManager.addNativeKeyListener(new DisplayMonitorInfoListener());
-      GlobalScreenManager.addNativeKeyListener(new KeyListener());
+      GlobalScreenManager.addNativeKeyListener(new MoveApplicationListener());
       GlobalScreenManager.addNativeKeyListener(new GuiActivateListener());
     } catch (Exception e) {
-      try {
-        LOG.error("Caught exception while trying to launch Catapult, attempting graceful shutdown...", e);
-        GlobalScreenManager.unregisterNativeHook();
-      } catch (NativeHookException ne) {
-        LOG.error("Unable to unregister native hooks", ne);
-      }
+      LOG.error("Caught exception while trying to launch Catapult, attempting graceful shutdown...", e);
+      GlobalScreenManager.unregisterNativeHook();
     }
   }
 }

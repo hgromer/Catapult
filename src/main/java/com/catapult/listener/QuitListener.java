@@ -1,13 +1,12 @@
 package com.catapult.listener;
 
 import com.catapult.listener.info.NativeKeyEventInfo;
-import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class QuitListener extends AbstractKeyListener {
-  private static final Logger LOG = LoggerFactory.getLogger(KeyListener.class);
+  private static final Logger LOG = LoggerFactory.getLogger(MoveApplicationListener.class);
 
   public QuitListener() {
     super(
@@ -18,14 +17,15 @@ public class QuitListener extends AbstractKeyListener {
   }
 
   @Override
+  protected String getVisibleName() {
+    return "Quit Catapult";
+  }
+
+  @Override
   protected void onAllPressed() {
-    try {
-      LOG.info("Gracefully shutting down Catapult...");
-      GlobalScreenManager.unregisterNativeHook();
-      LOG.info("Catapult shutdown");
-    } catch (NativeHookException e) {
-      LOG.error("Error quiting...could not unregister native hook", e);
-    }
+    LOG.info("Gracefully shutting down Catapult...");
+    GlobalScreenManager.unregisterNativeHook();
+    System.exit(0);
   }
 
   @Override

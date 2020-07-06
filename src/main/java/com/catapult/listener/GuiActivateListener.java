@@ -17,6 +17,11 @@ public class GuiActivateListener extends AbstractKeyListener implements AutoClos
   }
 
   @Override
+  protected String getVisibleName() {
+    return "Show options";
+  }
+
+  @Override
   protected void onAllPressed() {
     optionsGui.show();
   }

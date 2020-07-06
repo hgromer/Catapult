@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 public class NumberNativeKeyEventInfo implements BaseNativeKeyEventInfo {
   // VC_1 = 2 | VC_0 = 11
-  private static final Set<Integer> MATCHING_KEY_EVENT_CODES = IntStream.range(1, 12).boxed().collect(Collectors.toUnmodifiableSet());
+  private static final Set<Integer> MATCHING_KEY_EVENT_CODES = IntStream.range(2, 12).boxed().collect(Collectors.toUnmodifiableSet());
 
   private final boolean isActivationKey;
 
