@@ -15,6 +15,7 @@ public class Application {
   private static org.slf4j.Logger LOG = LoggerFactory.getLogger(Application.class);
   public static void main(String[] args) {
     // Turn off JNativeHook logger because it's noisy
+    Platform.setup();
     Logger.getLogger(GlobalScreen.class.getPackage().getName())
         .setLevel(Level.OFF);
     try {

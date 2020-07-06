@@ -31,19 +31,21 @@ public class OptionsGui {
   }
 
   public void show() {
-    Optional<Monitor> monitorMaybe = osManager.getMonitorWithMouse();
-    if (monitorMaybe.isEmpty()) {
-      throw new IllegalStateException("Could not find monitor with mouse");
+    if (!gui.isVisible()) {
+      Optional<Monitor> monitorMaybe = osManager.getMonitorWithMouse();
+      if (monitorMaybe.isEmpty()) {
+        throw new IllegalStateException("Could not find monitor with mouse");
+      }
+
+      Monitor monitor = monitorMaybe.get();
+      LOG.info("Displaying GUI at monitor {}", monitor.getDisplayableMonitorNumber());
+
+      Rectangle bounds = monitor.getBounds();
+
+      gui.setLocationRelativeTo(new JFrame(monitor.getConfiguration()));
+      gui.setSize(bounds.width / 3, bounds.height / 3);
+      gui.setVisible(true);
     }
-
-    Monitor monitor = monitorMaybe.get();
-    LOG.info("Displaying GUI at monitor {}", monitor.getDisplayableMonitorNumber());
-
-    Rectangle bounds = monitor.getBounds();
-
-    gui.setLocationRelativeTo(new JFrame(monitor.getConfiguration()));
-    gui.setSize(bounds.width / 3, bounds.height / 3);
-    gui.setVisible(true);
   }
 
   public void close() {

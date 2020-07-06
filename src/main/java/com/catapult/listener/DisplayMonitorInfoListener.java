@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DisplayMonitorInfoListener extends AbstractKeyListener implements AutoCloseable {
   private static final Logger LOG = LoggerFactory.getLogger(DisplayMonitorInfoListener.class);
@@ -22,7 +23,9 @@ public class DisplayMonitorInfoListener extends AbstractKeyListener implements A
         new NativeKeyEventInfo(NativeKeyEvent.VC_SHIFT, false),
         new NativeKeyEventInfo(NativeKeyEvent.VC_M, true)
     );
-    this.currentMonitorInfoDisplays = new ArrayList<>();
+    this.currentMonitorInfoDisplays = MonitorFactory.getMonitors().stream()
+        .map(MonitorInfoDisplay::new)
+        .collect(Collectors.toUnmodifiableList());
   }
 
 
@@ -41,18 +44,15 @@ public class DisplayMonitorInfoListener extends AbstractKeyListener implements A
 
   @Override
   protected void onAllPressed() {
-    for (Monitor monitor : MonitorFactory.getMonitors()) {
-      MonitorInfoDisplay display = new MonitorInfoDisplay(monitor);
+    for (MonitorInfoDisplay display : currentMonitorInfoDisplays) {
       display.display();
-      currentMonitorInfoDisplays.add(display);
     }
   }
 
   @Override
   protected void onReleased() {
-    for (MonitorInfoDisplay monitorInfoDisplay : currentMonitorInfoDisplays) {
-      monitorInfoDisplay.kill();
+    for (MonitorInfoDisplay display : currentMonitorInfoDisplays) {
+      display.hide();
     }
-    currentMonitorInfoDisplays.clear();
   }
 }

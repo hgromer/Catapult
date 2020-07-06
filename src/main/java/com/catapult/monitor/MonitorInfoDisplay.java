@@ -37,6 +37,10 @@ public class MonitorInfoDisplay {
     frame.setVisible(true);
   }
 
+  public void hide() {
+    frame.setVisible(false);
+  }
+
   public void kill() {
     frame.dispose();
   }

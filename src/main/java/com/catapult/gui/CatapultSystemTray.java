@@ -6,8 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 
 public class CatapultSystemTray {
@@ -35,6 +33,7 @@ public class CatapultSystemTray {
 
   private ImmutableList<MenuItem> buildMenuItems() {
     MenuItem quitItem = new MenuItem("Quit");
+    MenuItem guiItem = new MenuItem("Key binds");
 
     quitItem.addActionListener(e -> {
       LOG.info("System tray quit button selected");
@@ -42,6 +41,13 @@ public class CatapultSystemTray {
       LOG.info("Gracefully shutting down Catapult...");
       System.exit(0);
     });
-    return ImmutableList.of(quitItem);
+
+    guiItem.addActionListener(e -> {
+      LOG.info("System try gui button selected");
+      GuiManager.getOptionsGui()
+          .show();
+    });
+
+    return ImmutableList.of(guiItem, quitItem);
   }
 }
