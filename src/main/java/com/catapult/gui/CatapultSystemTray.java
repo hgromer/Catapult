@@ -36,14 +36,11 @@ public class CatapultSystemTray {
   private ImmutableList<MenuItem> buildMenuItems() {
     MenuItem quitItem = new MenuItem("Quit");
 
-    quitItem.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        LOG.info("System tray quit button selected");
-        GlobalScreenManager.unregisterNativeHook();
-        LOG.info("Gracefully shutting down Catapult...");
-        System.exit(0);
-      }
+    quitItem.addActionListener(e -> {
+      LOG.info("System tray quit button selected");
+      GlobalScreenManager.unregisterNativeHook();
+      LOG.info("Gracefully shutting down Catapult...");
+      System.exit(0);
     });
     return ImmutableList.of(quitItem);
   }
