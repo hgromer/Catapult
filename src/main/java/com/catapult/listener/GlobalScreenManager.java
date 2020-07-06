@@ -2,7 +2,6 @@ package com.catapult.listener;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
-import org.jnativehook.keyboard.NativeKeyListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,31 +10,30 @@ import java.util.Set;
 
 public class GlobalScreenManager {
   private static final Logger LOG = LoggerFactory.getLogger(GlobalScreenManager.class);
-  private static final Set<AutoCloseable> closeables = new HashSet<>();
+  private static final Set<AbstractKeyListener> LISTENERS = new HashSet<>();
 
   public static void registerNativeHook() throws NativeHookException {
     GlobalScreen.registerNativeHook();
   }
 
-  public static void unregisterNativeHook() throws NativeHookException {
-    for (AutoCloseable closeable : closeables) {
-      try {
-        LOG.info("Attempting to close {}...", closeable);
-        closeable.close();
-        LOG.info("{} closed", closeable);
-      } catch (Exception e) {
-        LOG.error("Failed to close auto closeable", e);
-      }
+  public static void unregisterNativeHook() {
+    LOG.info("Unregistering native hooks...");
+    try {
+      GlobalScreen.unregisterNativeHook();
+      LOG.info("Native hooks unregistered");
+    } catch (NativeHookException e) {
+      LOG.error("Error unregistering native hooks", e);
     }
-    GlobalScreen.unregisterNativeHook();
   }
 
-  public static void addNativeKeyListener(NativeKeyListener nativeKeyListener) {
-    GlobalScreen.addNativeKeyListener(nativeKeyListener);
-    if (nativeKeyListener instanceof AutoCloseable) {
-      LOG.info("Registering {} as autocloseable", nativeKeyListener.getClass());
-      closeables.add((AutoCloseable) nativeKeyListener);
-    }
+  public static void addNativeKeyListener(AbstractKeyListener abstractKeyListener) {
+    LOG.info("Adding listener {}", abstractKeyListener);
+    GlobalScreen.addNativeKeyListener(abstractKeyListener);
+    LISTENERS.add(abstractKeyListener);
+  }
+
+  public static Set<AbstractKeyListener> getListeners() {
+    return LISTENERS;
   }
 
 }

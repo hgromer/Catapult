@@ -10,13 +10,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class KeyListener extends AbstractKeyListener  {
-  private static final Logger LOG = LoggerFactory.getLogger(KeyListener.class);
+public class MoveApplicationListener extends AbstractKeyListener  {
+  private static final Logger LOG = LoggerFactory.getLogger(MoveApplicationListener.class);
 
   private final OsManager osManager;
   private NativeKeyEvent currentKeyEvent;
 
-  public KeyListener() {
+  public MoveApplicationListener() {
     super(
         new NativeKeyEventInfo(NativeKeyEvent.VC_CONTROL, false),
         new NativeKeyEventInfo(NativeKeyEvent.VC_SHIFT, false),
@@ -29,6 +29,11 @@ public class KeyListener extends AbstractKeyListener  {
   public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
     currentKeyEvent = nativeKeyEvent;
     super.nativeKeyPressed(nativeKeyEvent);
+  }
+
+  @Override
+  protected String getVisibleName() {
+    return "Move application";
   }
 
   @Override

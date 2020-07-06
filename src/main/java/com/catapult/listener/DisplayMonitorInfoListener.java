@@ -35,6 +35,11 @@ public class DisplayMonitorInfoListener extends AbstractKeyListener implements A
   }
 
   @Override
+  protected String getVisibleName() {
+    return "Display monitor numbers";
+  }
+
+  @Override
   protected void onAllPressed() {
     for (Monitor monitor : MonitorFactory.getMonitors()) {
       MonitorInfoDisplay display = new MonitorInfoDisplay(monitor);
