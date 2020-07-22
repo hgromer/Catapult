@@ -4,6 +4,7 @@
 target/
 .classpath
 **/target/
+**/META-INF/
 *.iml
 *.idea
 .factorypath
