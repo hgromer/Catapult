@@ -16,10 +16,9 @@ import java.util.logging.Logger;
 public class Application {
   private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(Application.class);
   public static void main(String[] args) {
-    // Turn off JNativeHook logger because it's noisy
     OsManager osManager = OsManagerFactory.getOsManager();
-    Logger.getLogger(GlobalScreen.class.getPackage().getName())
-        .setLevel(Level.OFF);
+    // Turn off JNativeHook logger because it's noisy
+    Logger.getLogger(GlobalScreen.class.getPackage().getName()).setLevel(Level.WARNING);
     try {
       GlobalScreenManager.registerNativeHook();
       GlobalScreenManager.addNativeKeyListener(new QuitListener());

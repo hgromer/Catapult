@@ -8,7 +8,9 @@ import java.awt.*;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MonitorsCache implements AutoCloseable {
   private static final Logger LOG = LoggerFactory.getLogger(MonitorsCache.class);
@@ -16,17 +18,19 @@ public class MonitorsCache implements AutoCloseable {
   private static final GraphicsEnvironment GRAPHICS_ENVIRONMENT = GraphicsEnvironment.getLocalGraphicsEnvironment();
   private static final Object LOCK = new Object();
 
-  private final Thread updateThread;
-  private final AtomicBoolean alive;
+  private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(1);
 
   private Map<Integer, Monitor> monitors;
 
   public MonitorsCache() {
     this.monitors = getCurrentMonitors();
-    this.alive = new AtomicBoolean(true);
-    this.updateThread = new Thread(this::update);
 
-    this.updateThread.start();
+    SCHEDULER.scheduleAtFixedRate(
+        this::update,
+        UPDATE_SLEEP_SECONDS,
+        UPDATE_SLEEP_SECONDS,
+        TimeUnit.SECONDS
+    );
   }
 
   public Collection<Monitor> getMonitors() {
@@ -44,8 +48,8 @@ public class MonitorsCache implements AutoCloseable {
   @Override
   public void close() throws Exception {
     LOG.info("Terminating update thread...");
-    alive.set(false);
-    updateThread.join();
+    SCHEDULER.shutdown();
+    SCHEDULER.awaitTermination(UPDATE_SLEEP_SECONDS, TimeUnit.SECONDS);
     LOG.info("Update thread terminated");
   }
 
@@ -60,16 +64,8 @@ public class MonitorsCache implements AutoCloseable {
   }
 
   private void update() {
-    LOG.info("Launching monitor update thread");
-    while (alive.get()) {
-      try {
-        Thread.sleep(UPDATE_SLEEP_SECONDS * 1000);
-      } catch (InterruptedException e) {
-        LOG.error("Could not sleep in update thread", e);
-      }
-      synchronized (LOCK) {
-        this.monitors = getCurrentMonitors();
-      }
+    synchronized (LOCK) {
+      this.monitors = getCurrentMonitors();
     }
   }
 }

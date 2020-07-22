@@ -2,15 +2,21 @@ package com.catapult.listener;
 
 import com.catapult.listener.info.BaseNativeKeyEventInfo;
 import com.google.common.collect.ImmutableMap;
+import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 public abstract class AbstractKeyListener implements NativeKeyListener {
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractKeyListener.class);
+
   private final Map<Integer, Boolean> isActivationForEventId;
   private final int totalPossibleActiveKeys;
 
@@ -54,6 +60,7 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
       Optional<Boolean> isActivationMaybe = Optional.ofNullable(isActivationForEventId.get(nativeKeyEvent.getKeyCode()));
 
       if (isActivationMaybe.isPresent()) {
+        consumeKeyEvent(nativeKeyEvent);
         activeKeys.add(nativeKeyEvent.getKeyCode());
         boolean isActivation = isActivationMaybe.get();
         int currentActive = activeKeys.size();
@@ -72,6 +79,7 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
     Optional<Boolean> isActivation = Optional.ofNullable(isActivationForEventId.get(nativeKeyEvent.getKeyCode()));
 
     if (isActivation.isPresent()) {
+      consumeKeyEvent(nativeKeyEvent);
       activeKeys.remove(nativeKeyEvent.getKeyCode());
       onReleased();
     }
@@ -89,4 +97,14 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
   protected abstract String getVisibleName();
   protected abstract void onAllPressed();
   protected abstract void onReleased();
+
+  private void consumeKeyEvent(NativeKeyEvent event) {
+    try {
+      Field field = NativeInputEvent.class.getDeclaredField("reserved");
+      field.setAccessible(true);
+      field.setShort(event, (short) 0x01);
+    } catch (Exception e) {
+      LOG.error("Failed to consume native key event {}", event, e);
+    }
+  }
 }
