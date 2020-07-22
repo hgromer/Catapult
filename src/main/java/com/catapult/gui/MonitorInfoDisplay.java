@@ -1,5 +1,6 @@
-package com.catapult.monitor;
+package com.catapult.gui;
 
+import com.catapult.monitor.Monitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

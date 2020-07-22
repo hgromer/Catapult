@@ -1,6 +1,7 @@
 package com.catapult.listener;
 
 import com.catapult.listener.info.NativeKeyEventInfo;
+import com.catapult.managers.OsManagerFactory;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public class QuitListener extends AbstractKeyListener {
   @Override
   protected void onAllPressed() {
     LOG.info("Gracefully shutting down Catapult...");
-    GlobalScreenManager.unregisterNativeHook();
+    OsManagerFactory.getOsManager().clean();
     System.exit(0);
   }
 

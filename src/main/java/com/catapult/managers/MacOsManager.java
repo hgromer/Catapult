@@ -1,5 +1,6 @@
 package com.catapult.managers;
 
+import com.catapult.listener.GlobalScreenManager;
 import com.catapult.monitor.Monitor;
 import com.catapult.monitor.MonitorFactory;
 import org.slf4j.Logger;
@@ -54,6 +55,12 @@ public class MacOsManager implements OsManager {
         LOG.error("Unable to move application {}", application, e);
       }
     }
+  }
+
+  @Override
+  public void clean() {
+    GlobalScreenManager.unregisterNativeHook();
+    MonitorFactory.close();
   }
 
   private String getResourceFileAsString(String filename) throws IOException {

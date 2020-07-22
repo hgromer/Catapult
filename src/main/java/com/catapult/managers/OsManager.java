@@ -9,4 +9,5 @@ public interface OsManager {
   String getForegroundApplication() throws IOException;
   Optional<Monitor> getMonitorWithMouse();
   void moveApplicationToMonitor(String application, int monitorNumber);
+  void clean();
 }
