@@ -5,6 +5,8 @@ import com.catapult.listener.GlobalScreenManager;
 import com.catapult.listener.GuiActivateListener;
 import com.catapult.listener.MoveApplicationListener;
 import com.catapult.listener.QuitListener;
+import com.catapult.managers.OsManager;
+import com.catapult.managers.OsManagerFactory;
 import org.jnativehook.GlobalScreen;
 import org.slf4j.LoggerFactory;
 
@@ -12,10 +14,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Application {
-  private static org.slf4j.Logger LOG = LoggerFactory.getLogger(Application.class);
+  private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(Application.class);
   public static void main(String[] args) {
     // Turn off JNativeHook logger because it's noisy
-    Platform.setup();
+    OsManager osManager = OsManagerFactory.getOsManager();
     Logger.getLogger(GlobalScreen.class.getPackage().getName())
         .setLevel(Level.OFF);
     try {
@@ -26,7 +28,7 @@ public class Application {
       GlobalScreenManager.addNativeKeyListener(new GuiActivateListener());
     } catch (Exception e) {
       LOG.error("Caught exception while trying to launch Catapult, attempting graceful shutdown...", e);
-      GlobalScreenManager.unregisterNativeHook();
+      osManager.clean();
     }
   }
 }
