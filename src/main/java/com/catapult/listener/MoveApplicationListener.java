@@ -8,8 +8,6 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class MoveApplicationListener extends AbstractKeyListener  {
   private static final Logger LOG = LoggerFactory.getLogger(MoveApplicationListener.class);
 
@@ -40,10 +38,9 @@ public class MoveApplicationListener extends AbstractKeyListener  {
   protected void onAllPressed() {
     try {
       int monitorNumber = Integer.parseInt(NativeKeyEvent.getKeyText(currentKeyEvent.getKeyCode()));
-      String application = osManager.getForegroundApplication();
-      LOG.info("Moving {} to monitor {}", application, monitorNumber - 1);
-      osManager.moveApplicationToMonitor(application, monitorNumber);
-    } catch (IOException e) {
+      LOG.info("Moving application to monitor {}", monitorNumber - 1);
+      osManager.moveForegroundApplicationToMonitor(monitorNumber);
+    } catch (Exception e) {
       LOG.error("Could not move application", e);
     }
   }

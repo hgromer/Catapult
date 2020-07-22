@@ -21,13 +21,6 @@ public class MacOsManager implements OsManager {
   private static final String FOREGROUND_FILE = "foreground.txt";
 
   @Override
-  public String getForegroundApplication() throws IOException {
-    String command = getResourceFileAsString(FOREGROUND_FILE);
-    Process process = runAppleScriptCommand(command);
-    return getProcessOutput(process);
-  }
-
-  @Override
   public Optional<Monitor> getMonitorWithMouse() {
     Collection<Monitor> monitors = MonitorFactory.getMonitors();
     GraphicsDevice deviceWithMouse = MouseInfo.getPointerInfo().getDevice();
@@ -44,7 +37,8 @@ public class MacOsManager implements OsManager {
   }
 
   @Override
-  public void moveApplicationToMonitor(String application, int monitorNumber) {
+  public void moveForegroundApplicationToMonitor(int monitorNumber) throws Exception {
+    String application = getForegroundApplication();
     Optional<Monitor> monitorMaybe = MonitorFactory.getMonitor(monitorNumber);
     if (monitorMaybe.isPresent()) {
       Rectangle rectangle = monitorMaybe.get().getBounds();
@@ -61,6 +55,12 @@ public class MacOsManager implements OsManager {
   public void clean() {
     GlobalScreenManager.unregisterNativeHook();
     MonitorFactory.close();
+  }
+
+  private String getForegroundApplication() throws IOException {
+    String command = getResourceFileAsString(FOREGROUND_FILE);
+    Process process = runAppleScriptCommand(command);
+    return getProcessOutput(process);
   }
 
   private String getResourceFileAsString(String filename) throws IOException {
