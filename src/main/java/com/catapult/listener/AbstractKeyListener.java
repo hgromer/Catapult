@@ -56,8 +56,18 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
 
   @Override
   public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
+    Optional<Boolean> isActivationMaybe = Optional.ofNullable(isActivationForEventId.get(nativeKeyEvent.getKeyCode()));
+
+    // If someone leaves the activation key pressed down it will continue to fire
+    // this event. So we need to continue to suppress it even after we've reached/exceeded
+    // the # of possible active keys
+    if (activeKeys.size() >= totalPossibleActiveKeys
+        && isActivationMaybe.isPresent()
+        && isActivationMaybe.get()) {
+      consumeKeyEvent(nativeKeyEvent);
+    }
+
     if (activeKeys.size() < totalPossibleActiveKeys) {
-      Optional<Boolean> isActivationMaybe = Optional.ofNullable(isActivationForEventId.get(nativeKeyEvent.getKeyCode()));
 
       if (isActivationMaybe.isPresent()) {
         activeKeys.add(nativeKeyEvent.getKeyCode());
