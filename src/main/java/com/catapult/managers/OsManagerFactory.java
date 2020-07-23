@@ -14,6 +14,10 @@ public class OsManagerFactory {
       LOG.info("Registering {} as OS manager", MacOsManager.class);
       System.setProperty("apple.awt.UIElement", "true");
       OS_MANAGER = new MacOsManager();
+    } else if (isWindows()) {
+      LOG.info("OS is Windows");
+      LOG.info("Registering {} as OS manager", WindowsOsManager.class);
+      OS_MANAGER = new WindowsOsManager();
     } else {
       throw new IllegalStateException("Mac is the only platform currently supported");
     }
@@ -25,5 +29,9 @@ public class OsManagerFactory {
 
   public static boolean isMac() {
     return OS.startsWith("Mac");
+  }
+
+  public static boolean isWindows() {
+    return OS.startsWith("Windows");
   }
 }

@@ -12,6 +12,7 @@
         <sl4j.version>1.7.5</sl4j.version>
         <guava.version>29.0-jre</guava.version>
         <jnativehook.version>2.1.0</jnativehook.version>
+        <jna.version>5.6.0</jna.version>
 
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.source>11</maven.compiler.source>
@@ -41,6 +42,18 @@
             <artifactId>jnativehook</artifactId>
             <version>${jnativehook.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>${jna.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>${jna.version}</version>
+        </dependency>
+
 
     </dependencies>
 

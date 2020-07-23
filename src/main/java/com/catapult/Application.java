@@ -18,7 +18,7 @@ public class Application {
   public static void main(String[] args) {
     OsManager osManager = OsManagerFactory.getOsManager();
     // Turn off JNativeHook logger because it's noisy
-    Logger.getLogger(GlobalScreen.class.getPackage().getName()).setLevel(Level.WARNING);
+    Logger.getLogger(GlobalScreen.class.getPackage().getName()).setLevel(Level.OFF);
     try {
       GlobalScreenManager.registerNativeHook();
       GlobalScreenManager.addNativeKeyListener(new QuitListener());

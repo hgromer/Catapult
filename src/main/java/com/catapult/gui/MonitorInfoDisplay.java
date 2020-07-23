@@ -25,6 +25,7 @@ public class MonitorInfoDisplay {
     text.setBackground(Color.BLACK);
     text.setForeground(Color.WHITE);
 
+    this.frame.setType(Window.Type.UTILITY);
     this.frame.setLocationRelativeTo(new JFrame(monitor.getConfiguration()));
     this.frame.setUndecorated(true);
     this.frame.setAlwaysOnTop(true);

@@ -11,14 +11,22 @@ import java.util.Set;
 public class GlobalScreenManager {
   private static final Logger LOG = LoggerFactory.getLogger(GlobalScreenManager.class);
   private static final Set<AbstractKeyListener> LISTENERS = new HashSet<>();
+  private static final EventConsumerDispatcher DISPATCH_SERVICE = new EventConsumerDispatcher();
 
   public static void registerNativeHook() throws NativeHookException {
+    GlobalScreen.setEventDispatcher(DISPATCH_SERVICE);
     GlobalScreen.registerNativeHook();
   }
 
   public static void unregisterNativeHook() {
-    LOG.info("Unregistering native hooks...");
+    LOG.info("Terminating dispatch service...");
+    for (AbstractKeyListener listener : LISTENERS) {
+      LOG.info("Removing listener {}...", listener);
+      GlobalScreen.removeNativeKeyListener(listener);
+      LOG.info("Listener {} removed", listener);
+    }
     try {
+      LOG.info("Unregistering native hooks...");
       GlobalScreen.unregisterNativeHook();
       LOG.info("Native hooks unregistered");
     } catch (NativeHookException e) {
