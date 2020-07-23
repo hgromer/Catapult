@@ -108,12 +108,10 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
   protected abstract void onReleased();
 
   private void consumeKeyEvent(NativeKeyEvent event) {
-    LOG.info("Consuming event {}...", event);
     try {
       Field field = NativeInputEvent.class.getDeclaredField("reserved");
       field.setAccessible(true);
       field.setShort(event, (short) 0x01);
-      LOG.info("Event {} consumed", event);
     } catch (Exception e) {
       LOG.error("Failed to consume native key event {}", event, e);
     }
