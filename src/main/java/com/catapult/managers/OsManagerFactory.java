@@ -19,7 +19,7 @@ public class OsManagerFactory {
       LOG.info("Registering {} as OS manager", WindowsOsManager.class);
       OS_MANAGER = new WindowsOsManager();
     } else {
-      throw new IllegalStateException("Mac is the only platform currently supported");
+      throw new IllegalStateException("MacOs and Windows are the only platforms currently supported");
     }
   }
 
