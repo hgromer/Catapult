@@ -24,6 +24,7 @@ public class OptionsGui {
 
   public OptionsGui() {
     gui = new JFrame("Catapult");
+    gui.setType(Window.Type.UTILITY);
     gui.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
     gui.getContentPane().add(getListenersList());
     gui.pack();
