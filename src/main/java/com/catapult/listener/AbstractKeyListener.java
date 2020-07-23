@@ -55,18 +55,18 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
   }
 
   @Override
-  public synchronized void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
+  public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
     if (activeKeys.size() < totalPossibleActiveKeys) {
       Optional<Boolean> isActivationMaybe = Optional.ofNullable(isActivationForEventId.get(nativeKeyEvent.getKeyCode()));
 
       if (isActivationMaybe.isPresent()) {
-        consumeKeyEvent(nativeKeyEvent);
         activeKeys.add(nativeKeyEvent.getKeyCode());
         boolean isActivation = isActivationMaybe.get();
         int currentActive = activeKeys.size();
 
         if (isActivation) {
           if (totalPossibleActiveKeys == currentActive) {
+            consumeKeyEvent(nativeKeyEvent);
             onAllPressed();
           }
         }
@@ -75,11 +75,10 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
   }
 
   @Override
-  public synchronized void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
+  public void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
     Optional<Boolean> isActivation = Optional.ofNullable(isActivationForEventId.get(nativeKeyEvent.getKeyCode()));
 
     if (isActivation.isPresent()) {
-      consumeKeyEvent(nativeKeyEvent);
       activeKeys.remove(nativeKeyEvent.getKeyCode());
       onReleased();
     }
@@ -99,12 +98,15 @@ public abstract class AbstractKeyListener implements NativeKeyListener {
   protected abstract void onReleased();
 
   private void consumeKeyEvent(NativeKeyEvent event) {
+    LOG.info("Consuming event {}...", event);
     try {
       Field field = NativeInputEvent.class.getDeclaredField("reserved");
       field.setAccessible(true);
       field.setShort(event, (short) 0x01);
+      LOG.info("Event {} consumed", event);
     } catch (Exception e) {
       LOG.error("Failed to consume native key event {}", event, e);
     }
   }
 }
+
