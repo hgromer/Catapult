@@ -26,6 +26,7 @@ public class QuitListener extends AbstractKeyListener {
   protected void onAllPressed() {
     LOG.info("Gracefully shutting down Catapult...");
     OsManagerFactory.getOsManager().clean();
+    LOG.info("Catapult gracefully shut down");
     System.exit(0);
   }
 

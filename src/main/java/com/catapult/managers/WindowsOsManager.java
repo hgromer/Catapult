@@ -8,26 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.util.Collection;
 import java.util.Optional;
 
-public class WindowsOsManager implements OsManager {
+public class WindowsOsManager extends OsManager {
   private static final Logger LOG = LoggerFactory.getLogger(WindowsOsManager.class);
-
-  @Override
-  public Optional<Monitor> getMonitorWithMouse() {
-    Collection<Monitor> monitors = MonitorFactory.getMonitors();
-    GraphicsDevice deviceWithMouse = MouseInfo.getPointerInfo().getDevice();
-    for (Monitor monitor : monitors) {
-      GraphicsDevice device = monitor.getConfiguration().getDevice();
-      if (device.getIDstring().equals(deviceWithMouse.getIDstring())) {
-        LOG.info("Mouse at monitor {}", monitor.getDisplayableMonitorNumber());
-        return Optional.of(monitor);
-      }
-    }
-    LOG.warn("Could not find monitor where mouse is located, defaulting to first monitor");
-    return MonitorFactory.getMonitor(1);
-  }
 
   @Override
   public void moveForegroundApplicationToMonitor(int monitorNumber) {
@@ -54,6 +38,6 @@ public class WindowsOsManager implements OsManager {
 
   @Override
   public void clean() {
-
+    super.clean();
   }
 }

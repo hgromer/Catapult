@@ -1,6 +1,5 @@
 package com.catapult.managers;
 
-import com.catapult.listener.GlobalScreenManager;
 import com.catapult.monitor.Monitor;
 import com.catapult.monitor.MonitorFactory;
 import org.slf4j.Logger;
@@ -11,30 +10,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class MacOsManager implements OsManager {
+public class MacOsManager extends OsManager {
   private static final Logger LOG = LoggerFactory.getLogger(MacOsManager.class);
   private static final Runtime RUNTIME = Runtime.getRuntime();
   private static final String FOREGROUND_FILE = "foreground.txt";
-
-  @Override
-  public Optional<Monitor> getMonitorWithMouse() {
-    Collection<Monitor> monitors = MonitorFactory.getMonitors();
-    GraphicsDevice deviceWithMouse = MouseInfo.getPointerInfo().getDevice();
-
-    for (Monitor monitor : monitors) {
-      GraphicsDevice device = monitor.getConfiguration().getDevice();
-      if (device.getIDstring().equals(deviceWithMouse.getIDstring())) {
-        LOG.info("Mouse at monitor {}", monitor.getDisplayableMonitorNumber());
-        return Optional.of(monitor);
-      }
-    }
-    LOG.warn("Could not find monitor where mouse is located, defaulting to first monitor");
-    return MonitorFactory.getMonitor(1);
-  }
 
   @Override
   public void moveForegroundApplicationToMonitor(int monitorNumber) throws Exception {
@@ -53,7 +35,7 @@ public class MacOsManager implements OsManager {
 
   @Override
   public void clean() {
-    GlobalScreenManager.unregisterNativeHook();
+    super.clean();
     MonitorFactory.close();
   }
 
